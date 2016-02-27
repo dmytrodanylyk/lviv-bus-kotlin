@@ -4,4 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="Filter">Filter</string>
+    <string name="Recent">Recent</string>
+    <string name="All">All</string>
+    <string name="Search_bus">Search bus</string>
 </resources>

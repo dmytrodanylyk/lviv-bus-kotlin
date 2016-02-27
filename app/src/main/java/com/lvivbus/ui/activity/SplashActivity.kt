@@ -1,7 +1,7 @@
 package com.lvivbus.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.lvivbus.R
 import com.lvivbus.model.db.BusDAO
 import com.lvivbus.model.http.BusAPI
@@ -11,7 +11,7 @@ import org.jetbrains.anko.async
 import org.jetbrains.anko.intentFor
 import java.util.concurrent.Executors
 
-class SplashActivity : Activity() {
+class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class SplashActivity : Activity() {
     private fun loadData() {
         async(Executors.newSingleThreadExecutor()) {
 
-            val busList = BusAPI().getBusList().map { it -> Bus(it.id, it.code, it.name) }
+            val busList = BusAPI().getBusList().map { it -> Bus(id = it.id, code = it.code, name = it.name) }
             BusDAO.save(busList)
             L.v("Buses saved: ${busList.size}")
 

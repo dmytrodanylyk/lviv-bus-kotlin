@@ -1,24 +1,32 @@
 package com.lvivbus.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
-import com.lvivbus.model.db.BusDAO
-import com.lvivbus.utils.L
-import io.realm.Realm
+import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import com.lvivbus.R
+import kotlinx.android.synthetic.main.map_activity.*
+import org.jetbrains.anko.intentFor
 
-class MapActivity : Activity() {
-
-    val realm = Realm.getDefaultInstance()
+class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BusDAO().getAll(realm).forEach {
-            L.v("Bus ${it.name} ${it.code}")
-        }
+        setContentView(R.layout.map_activity)
+
+        setSupportActionBar(toolbar);
     }
 
-    override fun onDestroy() {
-        realm.close()
-        super.onDestroy()
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        toolbar.inflateMenu(R.menu.map)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_filter -> startActivity(intentFor<BusListActivity>())
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
