@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.lvivbus.R
+import com.lvivbus.extensions.mapSafe
 import com.lvivbus.ui.data.Bus
 import com.lvivbus.ui.data.Displayable
 import com.lvivbus.ui.data.Title
@@ -64,11 +65,11 @@ class BusListAdapter(val context: Context, val listener: (Bus) -> Unit) : Recycl
         if (filter.isEmpty()) {
             filteredList.addAll(originalList)
         } else {
-            val filteredBusList = originalList
-                    .filter { it is Bus && it.name?.contains(filter, true) ?: false }
-                    .map { it -> it as Bus }
+            val filteredBusList2 = originalList
+                    .mapSafe { it as Bus }
+                    .filter { it.name?.contains(filter, true) ?: false }
                     .sortedBy { it.name }
-            filteredList.addAll(filteredBusList)
+            filteredList.addAll(filteredBusList2)
         }
 
         notifyDataSetChanged()
