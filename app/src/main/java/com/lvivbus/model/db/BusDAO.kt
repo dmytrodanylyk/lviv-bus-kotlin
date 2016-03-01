@@ -14,10 +14,10 @@ class BusDAO {
 
         fun getAllCount(): Long = Realm.getDefaultInstance().use { return it.where(Bus::class.java).count() }
 
-        fun save(busList: List<Bus>) = Realm.getDefaultInstance().executeAndClose { it.copyToRealm(busList) }
+        fun save(busList: List<Bus>) = Realm.getDefaultInstance().executeAndClose { copyToRealm(busList) }
 
         fun setRecentDate(busId: Int, date: Date) = Realm.getDefaultInstance().executeAndClose {
-            val bus: Bus? = it.where(Bus::class.java).equalTo("id", busId).findFirst();
+            val bus: Bus? = where(Bus::class.java).equalTo("id", busId).findFirst();
             bus?.recentDate = date
         }
 

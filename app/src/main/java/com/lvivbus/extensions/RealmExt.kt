@@ -2,9 +2,9 @@ package com.lvivbus.extensions
 
 import io.realm.Realm
 
-fun Realm.executeAndClose(code: (Realm) -> Unit) {
+fun Realm.executeAndClose(func: Realm.() -> Unit) {
     executeTransaction {
-        code(this)
+        func()
     }
     close()
 }

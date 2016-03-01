@@ -24,22 +24,16 @@ class BusListAdapter(val context: Context, val listener: (Bus) -> Unit) : Recycl
 
     override fun getItemCount() = filteredList.size
 
-    override fun getItemViewType(position: Int): Int {
-        when (filteredList[position]) {
-            is Bus -> return TYPE_BUS
-            is Title -> return TYPE_TITLE
-        }
-
-        return TYPE_UNDEFINED
+    override fun getItemViewType(position: Int): Int = when (filteredList[position]) {
+        is Bus -> TYPE_BUS
+        is Title -> TYPE_TITLE
+        else -> TYPE_UNDEFINED
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): BusListAdapter.ViewHolder? {
-        when (viewType) {
-            TYPE_TITLE -> return ViewHolder(inflater.inflate(R.layout.bus_list_item_title, viewGroup, false))
-            TYPE_BUS -> return ViewHolder(inflater.inflate(R.layout.bus_list_item, viewGroup, false))
-        }
-
-        return null
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): BusListAdapter.ViewHolder? = when (viewType) {
+        TYPE_TITLE -> ViewHolder(inflater.inflate(R.layout.bus_list_item_title, viewGroup, false))
+        TYPE_BUS -> ViewHolder(inflater.inflate(R.layout.bus_list_item, viewGroup, false))
+        else -> null
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, index: Int) {
@@ -65,19 +59,19 @@ class BusListAdapter(val context: Context, val listener: (Bus) -> Unit) : Recycl
         if (filter.isEmpty()) {
             filteredList.addAll(originalList)
         } else {
-            val filteredBusList2 = originalList
+            val filteredBusList = originalList
                     .mapSafe { it as Bus }
                     .filter { it.name?.contains(filter, true) ?: false }
                     .sortedBy { it.name }
-            filteredList.addAll(filteredBusList2)
+            filteredList.addAll(filteredBusList)
         }
 
         notifyDataSetChanged()
     }
 
-    private fun initBus(viewHolder: ViewHolder, bus: Bus) {
-        viewHolder.title.text = bus.name
-        viewHolder.title.setOnClickListener { listener.invoke(bus) }
+    private fun initBus(viewHolder: ViewHolder, bus: Bus) = with(viewHolder.title) {
+        text = bus.name
+        setOnClickListener { listener(bus) }
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {

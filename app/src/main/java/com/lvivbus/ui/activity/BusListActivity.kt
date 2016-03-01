@@ -21,7 +21,7 @@ class BusListActivity : AppCompatActivity() {
 
     private var maxRecentCount: Int = 3
     private val realm: Realm = Realm.getDefaultInstance()
-    private lateinit var adapter: BusListAdapter
+    private lateinit var busAdapter: BusListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,28 +40,27 @@ class BusListActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.search_bus, menu)
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = searchItem.actionView as SearchView
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.inputType = InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
-        searchView.isFocusable = true
-        searchView.isIconified = false
-        searchView.requestFocusFromTouch()
-        searchView.setSearchListener() {  adapter.filter(it) }
+        with(searchView) {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            inputType = InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
+            isFocusable = true
+            isIconified = false
+            requestFocusFromTouch()
+            setSearchListener() { busAdapter.filter(it) }
+        }
 
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        android.R.id.home -> {
+            finish()
+            true
         }
-
-        return super.onOptionsItemSelected(item)
+        else -> false
     }
 
     private fun loadData() {
@@ -69,18 +68,20 @@ class BusListActivity : AppCompatActivity() {
         var recentBusList = busList.filter { it.recentDate != null }.take(maxRecentCount)
         val allBusList = busList.subList(recentBusList.size, busList.size).sortedBy { it.name }
 
-        adapter.setData(recentBusList, allBusList);
-        adapter.notifyDataSetChanged()
+        busAdapter.setData(recentBusList, allBusList);
+        busAdapter.notifyDataSetChanged()
     }
 
     private fun initView() {
-        adapter = BusListAdapter(this) {
+        busAdapter = BusListAdapter(this) {
             BusDAO.setRecentDate(it.id, Date())
             finish()
         }
 
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = busAdapter
+        }
     }
 }
