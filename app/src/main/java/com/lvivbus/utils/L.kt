@@ -7,8 +7,8 @@ class L {
     companion object {
         var TAG = "LvivBus"
 
-        fun v(msg: String) = Log.v(TAG, msg)
-        fun d(msg: String) = Log.v(TAG, msg)
+        fun v(msg: String?) = Log.v(TAG, msg)
+        fun d(msg: String?) = Log.v(TAG, msg)
     }
 
 }

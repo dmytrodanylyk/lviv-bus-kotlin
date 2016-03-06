@@ -1,4 +1,4 @@
-package com.lvivbus.ui.activity
+package com.lvivbus.ui.screen
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,6 +6,7 @@ import com.lvivbus.R
 import com.lvivbus.model.db.BusDAO
 import com.lvivbus.model.http.BusAPI
 import com.lvivbus.ui.data.Bus
+import com.lvivbus.ui.screen.map.MapActivity
 import com.lvivbus.utils.L
 import org.jetbrains.anko.async
 import org.jetbrains.anko.intentFor

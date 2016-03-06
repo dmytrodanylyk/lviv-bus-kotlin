@@ -38,12 +38,16 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:recyclerview-v7:$support_version"
     compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.google.android.gms:play-services-maps:8.4.0"
+    compile "com.google.code.gson:gson:2.6.1"
+    compile "com.squareup.okhttp3:okhttp:3.0.1"
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.anko:anko-common:$anko_version"
-    compile 'com.google.code.gson:gson:2.6.1'
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
+
     compile "io.realm:realm-android-library:0.87.4"
     compile "io.realm:realm-annotations:0.87.4"
+
     kapt "io.realm:realm-annotations:0.87.4"
     kapt "io.realm:realm-annotations-processor:0.87.4"
 }

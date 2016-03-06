@@ -1,4 +1,4 @@
-package com.lvivbus.ui.adapter
+package com.lvivbus.ui.screen.selectbus
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -30,7 +30,7 @@ class BusListAdapter(val context: Context, val listener: (Bus) -> Unit) : Recycl
         else -> TYPE_UNDEFINED
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): BusListAdapter.ViewHolder? = when (viewType) {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder? = when (viewType) {
         TYPE_TITLE -> ViewHolder(inflater.inflate(R.layout.bus_list_item_title, viewGroup, false))
         TYPE_BUS -> ViewHolder(inflater.inflate(R.layout.bus_list_item, viewGroup, false))
         else -> null
@@ -46,9 +46,9 @@ class BusListAdapter(val context: Context, val listener: (Bus) -> Unit) : Recycl
 
     fun setData(recentList: List<Bus>, busList: List<Bus>) {
         if (recentList.isNotEmpty()) {
-            filteredList.add(Title(context.getString(R.string.Recent)))
+            filteredList.add(Title(context.getString(R.string.Recent).toUpperCase()))
             filteredList.addAll(recentList)
-            filteredList.add(Title(context.getString(R.string.All)))
+            filteredList.add(Title(context.getString(R.string.All).toUpperCase()))
         }
         filteredList.addAll(busList)
         originalList.addAll(filteredList)
@@ -69,9 +69,9 @@ class BusListAdapter(val context: Context, val listener: (Bus) -> Unit) : Recycl
         notifyDataSetChanged()
     }
 
-    private fun initBus(viewHolder: ViewHolder, bus: Bus) = with(viewHolder.title) {
-        text = bus.name
-        setOnClickListener { listener(bus) }
+    private fun initBus(viewHolder: ViewHolder, bus: Bus) = with(viewHolder) {
+        title.text = bus.name
+        title.setOnClickListener { listener(bus) }
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
