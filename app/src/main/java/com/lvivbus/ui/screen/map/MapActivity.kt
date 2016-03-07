@@ -1,5 +1,6 @@
 package com.lvivbus.ui.screen.map
 
+import android.support.annotation.UiThread
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.maps.GoogleMap
@@ -50,7 +51,7 @@ class MapActivity : AbsActivity<MapPresenter>() {
         toolbar.subtitle = title
     }
 
-
+    @UiThread
     fun addMarker(position: LatLng) = googleMap?.addMarker(MarkerOptions().position(position))
 
     fun clearMarker() {

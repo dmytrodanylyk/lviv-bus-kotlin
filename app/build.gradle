@@ -47,7 +47,10 @@ dependencies {
 
     compile "io.realm:realm-android-library:0.87.4"
     compile "io.realm:realm-annotations:0.87.4"
+    compile 'io.reactivex:rxkotlin:0.40.1'
+    compile 'io.reactivex:rxandroid:1.1.0'
 
     kapt "io.realm:realm-annotations:0.87.4"
     kapt "io.realm:realm-annotations-processor:0.87.4"
+
 }

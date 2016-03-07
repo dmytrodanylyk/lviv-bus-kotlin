@@ -1,9 +1,6 @@
 package com.lvivbus.ui.screen.map
 
-import android.os.AsyncTask
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.support.annotation.UiThread
 import android.util.SparseArray
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,32 +15,25 @@ import com.lvivbus.ui.screen.selectbus.BusListActivity
 import com.lvivbus.ui.utils.BusPreferences
 import com.lvivbus.utils.L
 import org.jetbrains.anko.intentFor
+import rx.Observable
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class MapPresenter(val activity: MapActivity) : AbsPresenter() {
 
     private var selectedBus: Bus? = null
-    private var timer: CountDownTimer? = null
+    private var subscription: Subscription? = null
     private var markerMap: SparseArray<Marker> = SparseArray()
-    private var task: AsyncTask<Bus, Void, List<BusMarker>>? = null
 
     private val preferences by lazy { BusPreferences(activity) }
 
     override fun onActivityAttached(savedInstanceState: Bundle?) {
-        timer = object : CountDownTimer(TimeUnit.MINUTES.toMillis(1), TimeUnit.SECONDS.toMillis(5)) {
-
-            override fun onFinish() {
-                start()
-            }
-
-            override fun onTick(millisUntilFinished: Long) {
-                loadMarkers()
-            }
-        }
     }
 
     override fun onActivityDetached() {
-        cancelMarkerLoading()
+        subscription?.unsubscribe()
     }
 
     fun onActivityVisible() {
@@ -54,11 +44,11 @@ class MapPresenter(val activity: MapActivity) : AbsPresenter() {
             activity.clearMarker()
             markerMap.clear()
         }
-        timer?.start()
+        loadMarkers()
     }
 
     fun onActivityNotVisible() {
-        cancelMarkerLoading()
+        subscription?.unsubscribe()
     }
 
     fun onSelectBusClicked() {
@@ -70,7 +60,6 @@ class MapPresenter(val activity: MapActivity) : AbsPresenter() {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lvivCenter, 12f))
     }
 
-    @UiThread
     private fun displayMarkers(markerList: List<BusMarker>) {
         L.v("Displaying markers: ${markerList.size}")
         markerList.forEach {
@@ -88,22 +77,12 @@ class MapPresenter(val activity: MapActivity) : AbsPresenter() {
 
     private fun loadMarkers() {
         selectedBus?.let {
-            task = object : AsyncTask<Bus, Void, List<BusMarker>>() {
-
-                override fun doInBackground(vararg bus: Bus) = BusAPI().getBusLocation(bus[0].code).map { BusMarker(it) }
-
-                override fun onPostExecute(result: List<BusMarker>) {
-                    displayMarkers(result)
-                }
-            }
-
-            task?.execute(it)
+            subscription = Observable.interval(5, TimeUnit.SECONDS).timeInterval()
+                    .map { BusAPI().getBusLocation(selectedBus?.code) }
+                    .map { it.map { BusMarker(it) } }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe { displayMarkers(it) }
         }
     }
-
-    private fun cancelMarkerLoading() {
-        timer?.cancel()
-        task?.cancel(false)
-    }
-
 }
