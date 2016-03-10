@@ -77,7 +77,8 @@ class MapPresenter(val activity: MapActivity) : AbsPresenter() {
 
     private fun loadMarkers() {
         selectedBus?.let {
-            subscription = Observable.interval(5, TimeUnit.SECONDS).timeInterval()
+            subscription = Observable.interval(5, TimeUnit.SECONDS)
+                    .startWith(0)
                     .map { BusAPI().getBusLocation(selectedBus?.code) }
                     .map { it.map { BusMarker(it) } }
                     .observeOn(AndroidSchedulers.mainThread())
