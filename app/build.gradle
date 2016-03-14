@@ -5,9 +5,11 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        classpath "io.realm:realm-gradle-plugin:$realm_version"
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -45,12 +47,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.anko:anko-common:$anko_version"
 
-    compile "io.realm:realm-android-library:0.87.4"
-    compile "io.realm:realm-annotations:0.87.4"
-    compile 'io.reactivex:rxkotlin:0.40.1'
-    compile 'io.reactivex:rxandroid:1.1.0'
-
-    kapt "io.realm:realm-annotations:0.87.4"
-    kapt "io.realm:realm-annotations-processor:0.87.4"
+    compile "io.reactivex:rxkotlin:0.40.1"
+    compile "io.reactivex:rxandroid:1.1.0"
 
 }
